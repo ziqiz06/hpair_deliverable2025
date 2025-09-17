@@ -9,7 +9,7 @@ import { debounce } from 'lodash'; // install via `npm install lodash`
 
 
 const savedData = localStorage.getItem('formData');
-const initialValues = savedData ? JSON.parse(savedData) : {
+let initialValues = {...savedData, cv: undefined} ? {...JSON.parse(savedData), cv: undefined} : {
   firstName: '',
   lastName: '',
   dateOfBirth: '',
@@ -20,7 +20,10 @@ const initialValues = savedData ? JSON.parse(savedData) : {
   linkedin: '',
   preferredLanguage: '',
   portfolio: '',
+  cv: undefined
  };
+if (initialValues.dateOfBirth) initialValues.dateOfBirth = new Date(initialValues.dateOfBirth).toISOString().split('T')[0];
+ console.log("initialValues", initialValues)
 const AutoSave = ({ values }) => {
   useEffect(() => {
     const debouncedSave = debounce(() => {
@@ -223,7 +226,7 @@ const MultiStepForm = () => {
           initialValues={initialValues}
           validationSchema={FormSchema}
          
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
 
 
             console.log("onSubmit called")
@@ -237,7 +240,8 @@ const MultiStepForm = () => {
 
             setTimeout(() => {
               console.log("onSubmit timeout")
-              alert(JSON.stringify(values, null, 2));
+              //alert(JSON.stringify(values, null, 2));
+              resetForm();
               setSubmitting(false);
             }, 400);
           }}
@@ -254,6 +258,7 @@ const MultiStepForm = () => {
             setFieldValue,
             /* and other goodies */
           }) => {
+            // console.log("errors", errors)
             return <>
             <form onSubmit={handleSubmit}>
             <AutoSave values={values} />
@@ -270,6 +275,12 @@ const MultiStepForm = () => {
             setFieldValue={setFieldValue}
 
           />
+
+{Object.keys(errors).length > 0 && (
+        <div className="submit-error" style={{ color: 'red', marginBottom: '10px' }}>
+          {errors.submit || 'Please fix the errors above before submitting.'}
+        </div>
+      )}
           
           {submitMessage && (
             <div className={`submit-message ${submitMessage.includes('successfully') ? 'success' : 'error'}`}>

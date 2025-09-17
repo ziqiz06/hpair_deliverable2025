@@ -195,7 +195,7 @@ const PersonalInfoStep = ({ formData, setFormData,
 
       {/* CV Upload */}
       <div className="form-group">
-        <label className="form-label">Upload CV *</label>
+        <label className="form-label">Upload CV</label>
         <input 
           type="file" 
           name="cv"
