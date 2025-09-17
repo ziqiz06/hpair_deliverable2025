@@ -150,7 +150,8 @@ code {
 .form-error {
   color: #dc3545;
   font-size: 14px;
-  margin-top: 4px;
+  margin-top: -8px;
+  margin-bottom: 20px;
 }
 
 .file-upload-area {

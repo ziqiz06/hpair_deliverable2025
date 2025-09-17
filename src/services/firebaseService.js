@@ -1,8 +1,21 @@
 // Firebase service for form submissions
 import { collection, addDoc, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase/config'; // make sure you’ve initialized this
+
+
+
 
 const COLLECTION_NAME = 'formSubmissions';
+
+export const uploadFileToStorage = async (file, path) => {
+  const storageRef = ref(storage, `${path}/${Date.now()}-${file.name}`);
+  const snapshot = await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(snapshot.ref);
+  return downloadURL;
+};
+
 
 // Submit form data to Firebase
 export const submitForm = async (formData) => {
